@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout>
+  <Nav />
+  <main id="main" class="section">
+    <div class="wrap legal">
+      <h1 class="display h-lg">Privacy</h1>
+      <p>[Privacy policy text to be provided by THEONE Consulting.]</p>
+      <p>This website uses no cookies and no tracking that identifies you.</p>
+      <p><a href="/">← Back to the homepage</a></p>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .legal { display: flex; flex-direction: column; gap: 20px; max-width: 760px; }
+  .legal p { margin: 0; }
+</style>

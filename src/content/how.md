@@ -1,0 +1,21 @@
+---
+eyebrow: "How we work"
+headline: "Clarity fast."
+headlineAccent: "Results that last."
+intro: "A simple, three-step engagement designed to create clarity fast and results that last."
+introCompact: "A simple, three-step engagement — from understanding your reality to changes that stick."
+steps:
+  - title: "Discover"
+    kicker: "We start by understanding your reality, not just your brief."
+    body: "Before proposing anything, we listen. We dig into how your business actually operates — your bottlenecks, your team dynamics, your priorities. Through structured conversations and a focused audit, we identify what's really holding you back and where the highest-leverage opportunities are."
+    bodyCompact: "Structured conversations and a focused audit of your bottlenecks, team dynamics and priorities — to find what's really holding you back."
+  - title: "Design"
+    kicker: "We build a clear plan — practical, not theoretical."
+    kickerCompact: "A clear plan — practical, not theoretical."
+    body: "Based on what we find, we design a tailored roadmap: the right structure, the right sequence, the right people involved. No generic frameworks. Every recommendation is built for your company, your stage, and your team's actual capacity to execute."
+    bodyCompact: "A tailored roadmap: the right structure, sequence and people. No generic frameworks — built for your stage and your team's real capacity."
+  - title: "Deliver"
+    kicker: "We work alongside you until it sticks."
+    body: "We don't hand over a deck and disappear. We embed, implement, and iterate — working with your team to make sure changes take hold. We measure what matters, adjust as we go, and transfer ownership back to you with the confidence and capability to sustain it."
+    bodyCompact: "No deck-and-disappear. We embed, implement and iterate — then hand ownership back with the capability to sustain it."
+---

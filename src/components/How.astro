@@ -1,0 +1,47 @@
+---
+import { section, pick, num } from '../lib/content';
+const h = section('how');
+---
+<section id="how" class="section">
+  <div class="wrap">
+    <div class="how__head">
+      <div class="how__titles">
+        <p class="label">{h.eyebrow}</p>
+        <h2 class="display h-lg" data-reveal>{h.headline}<br /><span class="accent">{h.headlineAccent}</span></h2>
+      </div>
+      <p class="how__intro" data-reveal>{pick(h, 'intro')}</p>
+    </div>
+    <div class="how__steps-wrap">
+      <svg class="draw how__line" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+        <path data-draw="scroll" d="M0 30 C 150 0, 260 60, 400 30 S 650 0, 800 30 S 1050 60, 1200 24" stroke="var(--accent)" stroke-width="1.5" />
+      </svg>
+      <ol class="how__steps">
+        {h.steps.map((s: any, i: number) => (
+          <li class="step" data-reveal>
+            <span class="numeral step__num" aria-hidden="true">{num(i)}</span>
+            <h3 class="display step__title">{s.title}</h3>
+            <p class="kicker">{pick(s, 'kicker')}</p>
+            <p class="step__body">{pick(s, 'body')}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .how__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: clamp(48px, 6vw, 72px); }
+  .how__titles { display: flex; flex-direction: column; gap: 24px; }
+  .how__intro { margin: 0; max-width: 24em; }
+  .how__steps-wrap { position: relative; }
+  .how__line { position: absolute; left: 0; top: 34px; width: 100%; height: 60px; overflow: visible; }
+  .how__steps { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px; margin: 0; padding: 0; list-style: none; }
+  .step { display: flex; flex-direction: column; gap: 18px; }
+  .step__num { color: var(--ink); background: var(--paper); align-self: flex-start; padding-right: 16px; }
+  .step__title { margin: 8px 0 0; font-size: 2.1rem; line-height: 1.1; }
+  .step__body { margin: 0; font-size: 16px; line-height: 1.7; }
+  @media (max-width: 860px) {
+    .how__steps { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+    .how__line { display: none; }
+  }
+</style>

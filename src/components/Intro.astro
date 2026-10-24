@@ -1,0 +1,16 @@
+---
+import { section } from '../lib/content';
+const i = section('intro');
+---
+<section class="section intro">
+  <div class="wrap intro__inner">
+    <p class="display intro__statement" data-reveal>{i.statement} <span class="accent">{i.statementAccent}</span></p>
+    <p class="intro__support" data-reveal>{i.support}</p>
+  </div>
+</section>
+
+<style>
+  .intro__inner { display: flex; flex-direction: column; gap: 32px; max-width: 1080px; }
+  .intro__statement { margin: 0; font-size: clamp(1.75rem, 3.3vw, 2.9rem); line-height: 1.25; }
+  .intro__support { margin: 0; max-width: 38em; }
+</style>

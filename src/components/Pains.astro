@@ -1,0 +1,37 @@
+---
+import { section, pick, num } from '../lib/content';
+const p = section('pains');
+---
+<section class="section bg-ink on-dark">
+  <div class="wrap">
+    <p class="label">{p.eyebrow}</p>
+    <h2 class="display h-lg pains__h" data-reveal>{p.headline}<br /><span class="accent">{p.headlineAccent}</span></h2>
+    <ol class="pains">
+      {p.items.map((it: any, i: number) => (
+        <li class="pain" data-reveal>
+          <span class="numeral" aria-hidden="true">{num(i)}</span>
+          <h3 class="display pain__title">{it.title}</h3>
+          <p class="pain__body">{pick(it, 'body')}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .pains__h { margin: 24px 0 clamp(48px, 6vw, 80px); max-width: 15em; }
+  .pains {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule-light);
+  }
+  .pain { display: flex; flex-direction: column; gap: 18px; padding: 48px 48px 56px 0; border-bottom: 1px solid var(--rule-light); }
+  .pain:nth-child(even) { padding: 48px 0 56px 48px; border-left: 1px solid var(--rule-light); }
+  .pain:nth-last-child(-n + 2) { border-bottom: 0; }
+  .pain__title { margin: 0; font-size: clamp(1.5rem, 2.2vw, 1.8rem); line-height: 1.2; color: #fff; }
+  .pain__body { margin: 0; font-size: 16px; line-height: 1.7; }
+  @media (max-width: 860px) {
+    .pains { grid-template-columns: minmax(0, 1fr); }
+    .pain, .pain:nth-child(even) { padding: 40px 0; border-left: 0; }
+    .pain:nth-last-child(2) { border-bottom: 1px solid var(--rule-light); }
+  }
+</style>

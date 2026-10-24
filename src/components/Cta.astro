@@ -1,0 +1,39 @@
+---
+import { Picture } from 'astro:assets';
+import Logo from './Logo.astro';
+import cafe from '../assets/photos/nataliya-cafe.jpg';
+import { section } from '../lib/content';
+const c = section('cta');
+const site = section('site');
+---
+<section id="contact" class="section bg-ink on-dark cta">
+  <div class="watermark cta__wm" aria-hidden="true"><Logo variant="swash" /></div>
+  <div class="wrap cta__grid">
+    <div class="cta__text">
+      <p class="label">{c.eyebrow}</p>
+      <h2 class="display h-xl cta__h" data-reveal>{c.headline}<br /><span class="accent">{c.headlineAccent}</span></h2>
+      <p class="cta__body" data-reveal>{c.body}</p>
+      <div class="cta__actions" data-reveal>
+        <a class="btn btn--sand" href={site.bookingUrl}>{site.bookingLabel}</a>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <a href={site.linkedin}>{c.linkedinLabel}</a>
+      </div>
+    </div>
+    <div class="frame cta__photo">
+      <div class="frame__clip">
+        <Picture src={cafe} alt={c.photoAlt} widths={[360, 560, 800]} sizes="(max-width: 900px) 92vw, 380px" formats={['avif', 'webp']} data-parallax />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta { overflow: hidden; }
+  .cta__wm { left: -8%; bottom: -30%; width: min(760px, 90vw); }
+  .cta__grid { position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(40px, 6vw, 72px); align-items: center; }
+  .cta__text { display: flex; flex-direction: column; gap: 30px; }
+  .cta__h { font-size: clamp(2.4rem, 4.4vw, 4.1rem); }
+  .cta__body { margin: 0; max-width: 32em; font-size: 18px; }
+  .cta__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 28px; }
+  @media (max-width: 900px) { .cta__grid { grid-template-columns: minmax(0, 1fr); } .cta__photo { max-width: 380px; } }
+</style>

@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { section } from '../lib/content';
+const site = section('site');
+---
+<Layout>
+  <Nav />
+  <main id="main" class="section">
+    <div class="wrap legal">
+      <h1 class="display h-lg">Legal notice</h1>
+      <p><strong>{site.legalName}</strong><br />{site.address}<br />IČO {site.ico}</p>
+      <p>Contact: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+      <p>[Trade register entry and any further legally required details to be provided.]</p>
+      <p><a href="/">← Back to the homepage</a></p>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .legal { display: flex; flex-direction: column; gap: 20px; max-width: 760px; }
+  .legal p { margin: 0; }
+</style>

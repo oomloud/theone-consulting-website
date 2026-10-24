@@ -1,0 +1,48 @@
+---
+import { section, pick, num } from '../lib/content';
+const s = section('services');
+const site = section('site');
+let n = 0;
+const groups = s.groups.map((g: any) => ({ ...g, items: g.items.map((it: any) => ({ ...it, n: num(n++) })) }));
+---
+<section id="services" class="section">
+  <div class="wrap">
+    <p class="label">{s.eyebrow}</p>
+    <h2 class="display h-lg services__h" data-reveal>{s.headline}<br /><span class="accent">{s.headlineAccent}</span></h2>
+    {groups.map((g: any) => (
+      <div class="group">
+        <p class="label label--small group__name">{g.name}</p>
+        <ul class="cards">
+          {g.items.map((it: any) => (
+            <li class="card" data-reveal>
+              <span class="numeral card__num" aria-hidden="true">{it.n}</span>
+              <h3 class="display card__title">{it.title}</h3>
+              <p class="kicker">{pick(it, 'kicker')}</p>
+              <p class="card__body">{pick(it, 'body')}</p>
+              <p class="card__for"><strong>{s.forLabel}</strong> {pick(it, 'for')}</p>
+              <a class="card__cta" href={site.bookingUrl}>{it.cta} <span aria-hidden="true">→</span></a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .services__h { margin: 24px 0 clamp(48px, 6vw, 72px); }
+  .group + .group { margin-top: 56px; }
+  .group__name { margin-bottom: 20px; }
+  .cards {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px;
+    margin: 0; padding: 0; list-style: none; background: var(--rule); border: 1px solid var(--rule);
+  }
+  .card { display: flex; flex-direction: column; gap: 16px; padding: 40px 36px; background: var(--paper); transition: transform .3s ease; }
+  .card__num { font-size: 3.5rem; transition: color .3s; }
+  .card__title { margin: 0; font-size: 1.7rem; line-height: 1.15; }
+  .card__body { margin: 0; flex: 1 1 auto; font-size: 15.5px; line-height: 1.7; }
+  .card__for { margin: 0; font-size: 13.5px; line-height: 1.6; }
+  .card__cta { font-size: 14px; font-weight: 600; }
+  @media (hover: hover) { .card:hover { transform: translateY(-4px); } }
+  @media (max-width: 960px) { .cards { grid-template-columns: minmax(0, 1fr); } .card { padding: 32px 24px; } }
+</style>

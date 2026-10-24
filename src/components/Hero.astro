@@ -1,0 +1,59 @@
+---
+import { Picture } from 'astro:assets';
+import Logo from './Logo.astro';
+import studio from '../assets/photos/nataliya-studio.jpg';
+import { section, pick } from '../lib/content';
+const h = section('hero');
+const site = section('site');
+---
+<section id="top" class="hero">
+  <div class="wrap hero__grid">
+    <div class="hero__text">
+      <p class="label">{h.eyebrow}</p>
+      <h1 class="display h-xl">
+        <span class="nowrap">{h.headlineStart}</span>{' '}
+        <span class="accent">{h.headlineAccent}{' '}
+          <span class="mark">{h.headlineMark}<svg class="draw mark__line" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path data-draw="load" d="M4 26 C 90 8, 210 6, 300 18 S 380 30, 396 10" stroke="var(--ink)" stroke-width="2.2" /></svg></span>
+        </span>
+      </h1>
+      <p class="hero__sub">{pick(h, 'sub')}</p>
+      <div class="hero__actions">
+        <a class="btn" href={site.bookingUrl}>{site.bookingLabel}</a>
+        <a href={h.secondaryCta.href} class="hero__link">{h.secondaryCta.label}</a>
+      </div>
+    </div>
+    <div class="hero__photo">
+      <div class="watermark hero__wm" aria-hidden="true"><Logo variant="swash" /></div>
+      <div class="frame">
+        <div class="frame__clip">
+          <Picture src={studio} alt={h.photoAlt} widths={[420, 640, 900]} sizes="(max-width: 900px) 92vw, 460px" formats={['avif', 'webp']} loading="eager" fetchpriority="high" data-parallax />
+        </div>
+      </div>
+      <p class="label hero__caption">{h.caption}</p>
+    </div>
+  </div>
+  <svg class="draw hero__line" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true">
+    <path data-draw="scroll" d="M-20 60 C 260 200, 520 -40, 760 90 S 1180 210, 1460 70" stroke="var(--accent)" stroke-width="1.5" />
+  </svg>
+</section>
+
+<style>
+  .hero { position: relative; padding: clamp(48px, 7vw, 96px) 0 clamp(110px, 10vw, 150px); }
+  .hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(40px, 6vw, 80px); align-items: center; }
+  .hero__text { display: flex; flex-direction: column; gap: 30px; }
+  .hero__sub { margin: 0; max-width: 34em; font-size: 18px; }
+  .hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; }
+  .hero__link { font-weight: 500; }
+  .mark { position: relative; display: inline-block; }
+  .mark__line { position: absolute; left: -4%; bottom: -0.12em; width: 108%; height: 0.28em; overflow: visible; }
+  .hero__photo { position: relative; }
+  .hero__wm { width: 120%; left: -22%; top: -14%; }
+  .hero__caption { margin-top: 30px; font-size: 11.5px; }
+  .hero__line { position: absolute; left: 0; bottom: -40px; width: 100%; height: 200px; overflow: visible; pointer-events: none; }
+  .frame__clip :global(img) { transform: scale(1.06); }
+  @media (max-width: 900px) {
+    .hero__grid { grid-template-columns: minmax(0, 1fr); }
+    .hero__photo { max-width: 460px; }
+    .hero__line { height: 120px; bottom: -20px; }
+  }
+</style>

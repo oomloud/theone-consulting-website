@@ -1,0 +1,29 @@
+---
+import Logo from './Logo.astro';
+import { section } from '../lib/content';
+const site = section('site');
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <div class="footer__logo"><Logo variant="box" /></div>
+    <div class="footer__meta">
+      <strong>{site.legalName}</strong>
+      <span>IČO {site.ico} · {site.address}</span>
+      <span>{site.footerLine}</span>
+    </div>
+    <ul class="footer__links">
+      <li><a href="/privacy">Privacy</a></li>
+      <li><a href="/legal">Legal notice</a></li>
+      <li>© {year}</li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .footer { padding: 64px 0 48px; }
+  .footer__inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px; }
+  .footer__logo { width: 120px; }
+  .footer__meta { display: flex; flex-direction: column; gap: 6px; max-width: 34em; font-size: 13.5px; line-height: 1.6; }
+  .footer__links { display: flex; gap: 24px; margin: 0; padding: 0; list-style: none; font-size: 13.5px; }
+</style>

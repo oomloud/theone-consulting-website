@@ -1,0 +1,27 @@
+---
+import { section } from '../lib/content';
+const e = section('experience');
+---
+<section class="exp" aria-label={e.label}>
+  <div class="wrap exp__inner">
+    <p class="label label--small">{e.label}</p>
+    <ul class="exp__list">
+      {e.companies.map((c: any) => (
+        <li>{c.logo ? <img src={c.logo} alt={c.name} class="exp__logo" loading="lazy" /> : <span class="display">{c.name}</span>}</li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .exp { position: relative; border-block: 1px solid var(--rule); background: var(--paper); }
+  .exp__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 56px; padding-block: 30px; }
+  .exp__list {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+    gap: 16px 44px; flex: 1 1 600px; margin: 0; padding: 0; list-style: none;
+    font-size: 21px; color: rgb(71 24 39 / 0.78);
+  }
+  /* Logos are tinted to burgundy so the strip reads as one colour. */
+  .exp__logo { height: 26px; width: auto; filter: brightness(0) saturate(100%) invert(12%) sepia(28%) saturate(2800%) hue-rotate(310deg) brightness(92%); opacity: 0.75; }
+  @media (max-width: 600px) { .exp__list { justify-content: flex-start; font-size: 19px; gap: 12px 28px; } }
+</style>

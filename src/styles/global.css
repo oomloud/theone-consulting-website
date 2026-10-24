@@ -1,0 +1,134 @@
+/* THEONE Consulting — brand tokens and base styles. See CLAUDE.md. */
+
+/* Mileast (the logo typeface). Once the web licence is confirmed, put the
+   file at public/fonts/mileast.woff2 and remove the comment markers below.
+   Until then headlines fall back to Gloock. */
+/*
+@font-face {
+  font-family: 'Mileast';
+  src: url('/fonts/mileast.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+:root {
+  --paper: #ffffff;
+  --ink: #471827;
+  --accent: #c66748;
+  --olive: #48481d;
+  --sand: #e1cdb4;
+
+  --rule: rgb(71 24 39 / 0.16);
+  --rule-light: rgb(225 205 180 / 0.28);
+
+  /* Swap 'Gloock' for 'Mileast' once the licensed .woff2 is in public/fonts/ (see fonts.css). */
+  --font-display: 'Mileast', 'Gloock', 'Times New Roman', serif;
+  --font-body: 'Montserrat', system-ui, sans-serif;
+
+  --wrap: 1240px;
+  --gutter: clamp(20px, 4vw, 48px);
+  --section: clamp(88px, 11vw, 140px);
+
+  --h-xl: clamp(2.6rem, 5.4vw, 5rem);
+  --h-lg: clamp(2.25rem, 4.8vw, 4.25rem);
+  --numeral: clamp(4rem, 6vw, 5.5rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-underline-offset: 0.3em; text-decoration-thickness: 1px; }
+a:hover { color: var(--accent); }
+.on-dark a:hover { color: #fff; }
+strong { font-weight: 600; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Decorations bleed past the edges on purpose; clip keeps sticky positioning working. */
+main { overflow-x: clip; }
+
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+.section { position: relative; padding-block: var(--section); }
+
+.on-dark { color: var(--sand); }
+.bg-ink { background: var(--ink); }
+.bg-olive { background: var(--olive); }
+
+.label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.label--small { font-size: 11px; font-weight: 600; }
+
+.display { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.005em; }
+.h-xl { margin: 0; font-size: var(--h-xl); line-height: 1.03; }
+.h-lg { margin: 0; font-size: var(--h-lg); line-height: 1.05; }
+.accent { color: var(--accent); }
+.on-dark .h-lg, .on-dark .h-xl { color: #fff; }
+.bg-olive .accent { color: var(--sand); } /* terracotta fails contrast on olive */
+
+.numeral { font-family: var(--font-display); font-size: var(--numeral); line-height: 0.9; color: var(--accent); }
+.kicker { margin: 0; font-style: italic; font-size: 15.5px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 52px; padding: 0 28px;
+  font-size: 12.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none;
+  background: var(--ink); color: #fff; border: 1px solid var(--ink);
+  transition: background-color .25s, color .25s;
+}
+.btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn--sand { background: var(--sand); color: var(--ink); border-color: var(--sand); }
+.btn--sand:hover { background: #fff; border-color: #fff; color: var(--ink); }
+.btn--small { min-height: 44px; padding: 0 20px; font-size: 11.5px; }
+
+/* Offset-frame photo */
+.frame { position: relative; margin: 0 18px 18px 0; }
+.frame::before {
+  content: ''; position: absolute; inset: 18px -18px -18px 18px;
+  border: 1px solid var(--accent); pointer-events: none;
+}
+.frame--left { margin: 0 0 18px 18px; }
+.frame--left::before { inset: 18px 18px -18px -18px; }
+.frame img { position: relative; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.frame__clip { overflow: hidden; position: relative; }
+
+/* Watermark "O" */
+.watermark { position: absolute; pointer-events: none; opacity: 0.07; }
+.watermark svg { width: 100%; height: auto; }
+
+/* Hand-drawn lines */
+.draw path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+
+/* Reveal targets start hidden only when motion runs; if the script never
+   loads, they appear on their own after a few seconds. */
+.motion [data-reveal] { opacity: 0; transform: translateY(28px); }
+.motion [data-draw] { opacity: 0; }
+.motion:not(.motion-ready) [data-reveal],
+.motion:not(.motion-ready) [data-draw] { animation: reveal-fallback .6s ease 4s forwards; }
+@keyframes reveal-fallback { to { opacity: 1; transform: none; } }
+
+/* Headline line reveal */
+.nowrap { white-space: nowrap; }
+.reveal-line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.reveal-line > span { display: inline-block; }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.skip-link {
+  position: absolute; left: 16px; top: -60px; z-index: 100;
+  background: var(--ink); color: #fff; padding: 12px 16px; text-decoration: none;
+}
+.skip-link:focus { top: 16px; }

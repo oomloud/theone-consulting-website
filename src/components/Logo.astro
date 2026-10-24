@@ -1,0 +1,16 @@
+---
+// Inlines a brand SVG so it takes the current text colour.
+import horizontal from '../brand/logo-horizontal.svg?raw';
+import box from '../brand/logo-box.svg?raw';
+import swash from '../brand/o-swash.svg?raw';
+
+interface Props { variant: 'horizontal' | 'box' | 'swash'; class?: string; }
+const { variant, class: cls } = Astro.props;
+const svg = { horizontal, box, swash }[variant];
+---
+<span class:list={['logo', cls]} set:html={svg} />
+
+<style>
+  .logo { display: block; line-height: 0; }
+  .logo :global(svg) { width: 100%; height: auto; }
+</style>

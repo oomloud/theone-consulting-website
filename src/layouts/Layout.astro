@@ -10,6 +10,7 @@ import studio from '../assets/photos/nataliya-studio.jpg';
 import { section } from '../lib/content';
 
 const site = section('site');
+const { noindex = false } = Astro.props as { noindex?: boolean };
 const og = await getImage({ src: studio, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -20,7 +21,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{site.title}</title>
   <meta name="description" content={site.description} />
-  <link rel="canonical" href={canonical} />
+  <link rel="canonical" href={noindex ? new URL('/', Astro.site) : canonical} />
+  {noindex && <meta name="robots" content="noindex" />}
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <meta name="theme-color" content="#471827" />
   <meta property="og:type" content="website" />
@@ -45,6 +47,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <slot />
   <script>
     import '../scripts/motion';
+    import '../scripts/expand';
   </script>
 </body>
 </html>

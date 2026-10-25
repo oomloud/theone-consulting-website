@@ -63,5 +63,11 @@ export function init() {
     );
   });
 
+  // Expanding text changes the page height.
+  window.addEventListener('copy:toggle', () => {
+    lenis.resize();
+    ScrollTrigger.refresh();
+  });
+
   document.documentElement.classList.add('motion-ready');
 }

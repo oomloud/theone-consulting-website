@@ -2,9 +2,15 @@
 import { Picture } from 'astro:assets';
 import Logo from './Logo.astro';
 import street from '../assets/photos/nataliya-street.jpg';
-import { section, pick, compact, inline } from '../lib/content';
+import { section, inline, copyMode } from '../lib/content';
 const a = section('about');
-const paragraphs: string[] = pick(a, 'paragraphs');
+const mode = copyMode(Astro.url);
+const full: string[] = a.paragraphs;
+const short: string[] = a.paragraphsCompact ?? full;
+// compact → short story + stats; full → full story + "What I bring";
+// expandable → short story + stats, with the full story and list behind a button.
+const paragraphs = mode === 'full' ? full : short;
+const showStats = mode !== 'full';
 ---
 <section id="about" class="section about">
   <div class="wrap about__grid">
@@ -19,13 +25,31 @@ const paragraphs: string[] = pick(a, 'paragraphs');
     <div class="about__text">
       <p class="label">{a.eyebrow}</p>
       <h2 class="display about__h" data-reveal>{a.greeting} <span class="accent">{a.name}</span></h2>
-      {paragraphs.map((t, i) => <p class:list={['about__p', { 'about__p--lead': i === 0 }]} set:html={inline(t)} />)}
+      {mode === 'expandable' ? (
+        <div class="about__story" data-xt>
+          <div class="xt__short about__ps">
+            {short.map((t, i) => <p class:list={['about__p', { 'about__p--lead': i === 0 }]} set:html={inline(t)} />)}
+          </div>
+          <div class="xt__full about__ps" hidden>
+            {full.map((t, i) => <p class:list={['about__p', { 'about__p--lead': i === 0 }]} set:html={inline(t)} />)}
+            <div>
+              <h3 class="label label--small">{a.bringLabel}</h3>
+              <ul class="bring">
+                {a.bring.map((b: string) => <li><span class="accent display" aria-hidden="true">—</span><span>{b}</span></li>)}
+              </ul>
+            </div>
+          </div>
+          <button type="button" class="xt__btn xt__btn--block" aria-expanded="false" data-more="Read Nataliya's full story" data-less="Show less">Read Nataliya's full story</button>
+        </div>
+      ) : (
+        paragraphs.map((t, i) => <p class:list={['about__p', { 'about__p--lead': i === 0 }]} set:html={inline(t)} />)
+      )}
       <p class="display pillars">
         {a.pillars.map((p: string, i: number) => (
           <Fragment>{i > 0 && <span class="accent" aria-hidden="true">·</span>}<span>{p}</span></Fragment>
         ))}
       </p>
-      {compact ? (
+      {showStats ? (
         <ul class="stats">
           {a.stats.map((s: any) => (
             <li class="stat"><span class="numeral stat__value">{s.value}</span><span class="stat__label">{s.label}</span></li>
@@ -51,6 +75,8 @@ const paragraphs: string[] = pick(a, 'paragraphs');
   .about__text { display: flex; flex-direction: column; gap: 26px; padding-top: 16px; }
   .about__h { margin: 0; font-size: clamp(2.5rem, 5.2vw, 4.75rem); line-height: 1.02; }
   .about__p { margin: 0; }
+  .about__story, .about__ps { display: flex; flex-direction: column; gap: 26px; }
+  .about__story > [hidden] { display: none; }
   .about__p--lead { font-size: 18px; }
   .pillars {
     display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; margin: 0;

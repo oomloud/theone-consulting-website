@@ -1,6 +1,8 @@
 ---
-import { section, pick, num } from '../lib/content';
+import Text from './Text.astro';
+import { section, pick, copyMode, num } from '../lib/content';
 const s = section('services');
+const mode = copyMode(Astro.url);
 const site = section('site');
 let n = 0;
 const groups = s.groups.map((g: any) => ({ ...g, items: g.items.map((it: any) => ({ ...it, n: num(n++) })) }));
@@ -17,9 +19,9 @@ const groups = s.groups.map((g: any) => ({ ...g, items: g.items.map((it: any) =>
             <li class="card" data-reveal>
               <span class="numeral card__num" aria-hidden="true">{it.n}</span>
               <h3 class="display card__title">{it.title}</h3>
-              <p class="kicker">{pick(it, 'kicker')}</p>
-              <p class="card__body">{pick(it, 'body')}</p>
-              <p class="card__for"><strong>{s.forLabel}</strong> {pick(it, 'for')}</p>
+              <p class="kicker">{pick(it, 'kicker', mode)}</p>
+              <Text obj={it} k="body" class="card__body" />
+              <p class="card__for"><strong>{s.forLabel}</strong> {pick(it, 'for', mode)}</p>
               <a class="card__cta" href={site.bookingUrl}>{it.cta} <span aria-hidden="true">→</span></a>
             </li>
           ))}
@@ -40,7 +42,7 @@ const groups = s.groups.map((g: any) => ({ ...g, items: g.items.map((it: any) =>
   .card { display: flex; flex-direction: column; gap: 16px; padding: 40px 36px; background: var(--paper); transition: transform .3s ease; }
   .card__num { font-size: 3.5rem; transition: color .3s; }
   .card__title { margin: 0; font-size: 1.7rem; line-height: 1.15; }
-  .card__body { margin: 0; flex: 1 1 auto; font-size: 15.5px; line-height: 1.7; }
+  :global(.card__body) { margin: 0; flex: 1 1 auto; font-size: 15.5px; line-height: 1.7; }
   .card__for { margin: 0; font-size: 13.5px; line-height: 1.6; }
   .card__cta { font-size: 14px; font-weight: 600; }
   @media (hover: hover) { .card:hover { transform: translateY(-4px); } }

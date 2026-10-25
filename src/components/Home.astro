@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from './Nav.astro';
+import Hero from './Hero.astro';
+import Experience from './Experience.astro';
+import Intro from './Intro.astro';
+import Pains from './Pains.astro';
+import How from './How.astro';
+import Ways from './Ways.astro';
+import Services from './Services.astro';
+import About from './About.astro';
+import Cta from './Cta.astro';
+import Footer from './Footer.astro';
+import VersionSwitch from './VersionSwitch.astro';
+interface Props { noindex?: boolean; }
+const { noindex = false } = Astro.props;
+---
+<Layout noindex={noindex}>
+  <Nav />
+  <main id="main">
+    <Hero />
+    <Experience />
+    <Intro />
+    <Pains />
+    <How />
+    <Ways />
+    <Services />
+    <About />
+    <Cta />
+  </main>
+  <Footer />
+  <VersionSwitch />
+</Layout>

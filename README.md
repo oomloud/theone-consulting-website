@@ -14,6 +14,7 @@ npm run build    # static site in dist/
 
 All copy lives in `src/content/`, one Markdown file per section (only the part between the `---` lines matters). Edit the text there; no component changes needed.
 
+- **Preview versions:** `/` shows the full copy, `/compact` the shortened copy, `/expandable` the short copy with "Read more" buttons. Before launch, delete `src/pages/compact.astro` and `src/pages/expandable.astro` and set `showVersionSwitch: false` in `site.md`.
 - **Full vs compact copy:** set `copy: full` or `copy: compact` in `src/content/site.md`. Full (Nataliya's original) is the default.
 - **Placeholders:** anything in `[square brackets]` still needs real content — contact details in `site.md`, years of experience in `about.md`.
 

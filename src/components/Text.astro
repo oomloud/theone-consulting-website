@@ -1,0 +1,22 @@
+---
+// Long text that follows the copy mode.
+// In "expandable" mode it shows the compact text plus a "Read more" button
+// that swaps in the full text in place (tap works on phones; hover would not).
+import { both, copyMode, type Mode } from '../lib/content';
+
+interface Props { obj: Record<string, any>; k: string; class?: string; tag?: 'p' | 'div'; }
+const { obj, k, class: cls, tag: Tag = 'p' } = Astro.props;
+const mode: Mode = copyMode(Astro.url);
+const { full, short } = both(obj, k);
+const expandable = mode === 'expandable' && short !== full;
+const text = mode === 'compact' ? short : full;
+---
+{expandable ? (
+  <Tag class:list={[cls, 'xt']} data-xt>
+    <span class="xt__short">{short}</span>
+    <span class="xt__full" hidden>{full}</span>
+    {' '}<button type="button" class="xt__btn" aria-expanded="false">Read more</button>
+  </Tag>
+) : (
+  <Tag class={cls}>{text}</Tag>
+)}

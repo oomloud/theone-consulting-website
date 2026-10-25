@@ -1,6 +1,8 @@
 ---
-import { section, pick, num } from '../lib/content';
+import Text from './Text.astro';
+import { section, pick, copyMode, num } from '../lib/content';
 const p = section('pains');
+const mode = copyMode(Astro.url);
 ---
 <section class="section bg-ink on-dark">
   <div class="wrap">
@@ -11,7 +13,7 @@ const p = section('pains');
         <li class="pain" data-reveal>
           <span class="numeral" aria-hidden="true">{num(i)}</span>
           <h3 class="display pain__title">{it.title}</h3>
-          <p class="pain__body">{pick(it, 'body')}</p>
+          <Text obj={it} k="body" class="pain__body" />
         </li>
       ))}
     </ol>
@@ -28,7 +30,7 @@ const p = section('pains');
   .pain:nth-child(even) { padding: 48px 0 56px 48px; border-left: 1px solid var(--rule-light); }
   .pain:nth-last-child(-n + 2) { border-bottom: 0; }
   .pain__title { margin: 0; font-size: clamp(1.5rem, 2.2vw, 1.8rem); line-height: 1.2; color: #fff; }
-  .pain__body { margin: 0; font-size: 16px; line-height: 1.7; }
+  :global(.pain__body) { margin: 0; font-size: 16px; line-height: 1.7; }
   @media (max-width: 860px) {
     .pains { grid-template-columns: minmax(0, 1fr); }
     .pain, .pain:nth-child(even) { padding: 40px 0; border-left: 0; }

@@ -1,0 +1,35 @@
+---
+// Floating switch between the copy versions, for showing them to Nataliya.
+// Turn off with `showVersionSwitch: false` in site.md (and delete the preview pages) before launch.
+import { copyMode, section } from '../lib/content';
+const site = section('site');
+const mode = copyMode(Astro.url);
+const links = [
+  { href: '/', label: 'Full', mode: 'full' },
+  { href: '/compact', label: 'Compact', mode: 'compact' },
+  { href: '/expandable', label: 'Read more', mode: 'expandable' },
+];
+---
+{site.showVersionSwitch && (
+  <nav class="vs" aria-label="Copy version">
+    {links.map((l) => (
+      <a href={l.href} aria-current={mode === l.mode ? 'page' : undefined}>{l.label}</a>
+    ))}
+  </nav>
+)}
+
+<style>
+  .vs {
+    position: fixed; right: 16px; bottom: 16px; z-index: 95;
+    display: flex; gap: 4px; padding: 5px;
+    background: #fff; border: 1px solid var(--ink);
+    box-shadow: 0 6px 24px rgb(71 24 39 / 0.18);
+  }
+  .vs a {
+    display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none;
+    color: var(--ink);
+  }
+  .vs a[aria-current='page'] { background: var(--ink); color: #fff; }
+  .vs a:hover:not([aria-current]) { color: var(--accent); }
+</style>

@@ -11,13 +11,40 @@ export function section(name: string): Data {
   return mod.frontmatter;
 }
 
-const site = section('site');
-export const compact = site.copy === 'compact';
+/**
+ * Copy modes:
+ * - full:       Nataliya's original text.
+ * - compact:    the shortened variant.
+ * - expandable: compact text with a "Read more" control that reveals the full text.
+ */
+export type Mode = 'full' | 'compact' | 'expandable';
 
-/** Returns obj[`${key}Compact`] when the compact copy is selected and exists, else obj[key]. */
-export function pick(obj: Data, key: string): any {
-  if (compact && obj[`${key}Compact`] !== undefined) return obj[`${key}Compact`];
+const site = section('site');
+
+/** Preview pages for comparing copy versions (remove before launch). */
+export const previewModes: Record<string, Mode> = { compact: 'compact', expandable: 'expandable' };
+
+/** The copy mode for the current page: preview URL first, else `copy:` in site.md. */
+export function copyMode(url: URL): Mode {
+  const first = url.pathname.split('/').filter(Boolean)[0];
+  if (first && previewModes[first]) return previewModes[first];
+  return site.copy === 'compact' ? 'compact' : 'full';
+}
+
+/**
+ * Returns the field to show. Short fields (titles, kickers, "For" lines) use the
+ * compact text only in compact mode; in expandable mode they stay full.
+ */
+export function pick(obj: Data, key: string, mode: Mode): any {
+  if (mode === 'compact' && obj[`${key}Compact`] !== undefined) return obj[`${key}Compact`];
   return obj[key];
+}
+
+/** For long text: both versions, when they differ. */
+export function both(obj: Data, key: string): { full: any; short: any } {
+  const full = obj[key];
+  const short = obj[`${key}Compact`] ?? full;
+  return { full, short };
 }
 
 /** Two-digit numeral: 1 → "01". */

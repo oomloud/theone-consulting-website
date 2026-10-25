@@ -2,16 +2,21 @@
 import Logo from './Logo.astro';
 import { section } from '../lib/content';
 const site = section('site');
+import { previewModes } from '../lib/content';
+const first = Astro.url.pathname.split('/').filter(Boolean)[0];
+const isHome = !first || first in previewModes;
+// On a home variant, keep anchors on the same page; elsewhere, go back to the homepage.
+const anchor = (href: string) => (isHome ? href.replace(/^\//, '') : href);
 ---
 <header class="nav">
   <div class="wrap nav__inner">
-    <a href="/#top" class="nav__logo" aria-label="THEONE Consulting — back to top">
+    <a href={anchor("/#top")} class="nav__logo" aria-label="THEONE Consulting — back to top">
       <Logo variant="horizontal" />
     </a>
     <nav aria-label="Main">
       <ul class="nav__links">
         {site.nav.map((l: any) => (
-          <li class="nav__item"><a class="label" href={l.href}>{l.label}</a></li>
+          <li class="nav__item"><a class="label" href={anchor(l.href)}>{l.label}</a></li>
         ))}
         <li><a class="btn btn--small" href={site.bookingUrl}>Book a call</a></li>
       </ul>

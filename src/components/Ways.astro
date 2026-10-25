@@ -1,7 +1,9 @@
 ---
 import Logo from './Logo.astro';
-import { section, pick } from '../lib/content';
+import Text from './Text.astro';
+import { section, pick, copyMode } from '../lib/content';
 const w = section('ways');
+const mode = copyMode(Astro.url);
 ---
 <section class="section bg-olive on-dark ways">
   <div class="watermark ways__wm" aria-hidden="true"><Logo variant="swash" /></div>
@@ -12,11 +14,11 @@ const w = section('ways');
       {w.items.map((it: any) => (
         <li class="way" data-reveal>
           <div>
-            <h3 class="display way__title">{pick(it, 'title')}</h3>
-            <p class="kicker">{pick(it, 'kicker')}</p>
+            <h3 class="display way__title">{pick(it, 'title', mode)}</h3>
+            <p class="kicker">{pick(it, 'kicker', mode)}</p>
           </div>
-          <p class="way__body">{pick(it, 'body')}</p>
-          <p class="way__for"><span class="label label--small">{w.bestForLabel}</span>{pick(it, 'bestFor')}</p>
+          <Text obj={it} k="body" class="way__body" />
+          <p class="way__for"><span class="label label--small">{w.bestForLabel}</span>{pick(it, 'bestFor', mode)}</p>
         </li>
       ))}
     </ul>
@@ -34,7 +36,7 @@ const w = section('ways');
     padding-block: 40px; border-bottom: 1px solid var(--rule-light);
   }
   .way__title { margin: 0 0 8px; font-size: 1.85rem; line-height: 1.15; color: #fff; }
-  .way__body { margin: 0; font-size: 16px; line-height: 1.7; }
+  :global(.way__body) { margin: 0; font-size: 16px; line-height: 1.7; }
   .way__for { margin: 0; font-size: 14px; line-height: 1.6; }
   .way__for .label { display: block; margin-bottom: 6px; }
   @media (max-width: 900px) { .way { grid-template-columns: minmax(0, 1fr); gap: 14px; padding-block: 32px; } }

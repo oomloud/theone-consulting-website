@@ -1,6 +1,8 @@
 ---
-import { section, pick, num } from '../lib/content';
+import Text from './Text.astro';
+import { section, pick, copyMode, num } from '../lib/content';
 const h = section('how');
+const mode = copyMode(Astro.url);
 ---
 <section id="how" class="section">
   <div class="wrap">
@@ -9,7 +11,7 @@ const h = section('how');
         <p class="label">{h.eyebrow}</p>
         <h2 class="display h-lg" data-reveal>{h.headline}<br /><span class="accent">{h.headlineAccent}</span></h2>
       </div>
-      <p class="how__intro" data-reveal>{pick(h, 'intro')}</p>
+      <p class="how__intro" data-reveal>{pick(h, 'intro', mode)}</p>
     </div>
     <div class="how__steps-wrap">
       <svg class="draw how__line" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
@@ -20,8 +22,8 @@ const h = section('how');
           <li class="step" data-reveal>
             <span class="numeral step__num" aria-hidden="true">{num(i)}</span>
             <h3 class="display step__title">{s.title}</h3>
-            <p class="kicker">{pick(s, 'kicker')}</p>
-            <p class="step__body">{pick(s, 'body')}</p>
+            <p class="kicker">{pick(s, 'kicker', mode)}</p>
+            <Text obj={s} k="body" class="step__body" />
           </li>
         ))}
       </ol>
@@ -39,7 +41,7 @@ const h = section('how');
   .step { display: flex; flex-direction: column; gap: 18px; }
   .step__num { color: var(--ink); background: var(--paper); align-self: flex-start; padding-right: 16px; }
   .step__title { margin: 8px 0 0; font-size: 2.1rem; line-height: 1.1; }
-  .step__body { margin: 0; font-size: 16px; line-height: 1.7; }
+  :global(.step__body) { margin: 0; font-size: 16px; line-height: 1.7; }
   @media (max-width: 860px) {
     .how__steps { grid-template-columns: minmax(0, 1fr); gap: 48px; }
     .how__line { display: none; }

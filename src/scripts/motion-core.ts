@@ -69,5 +69,9 @@ export function init() {
     ScrollTrigger.refresh();
   });
 
+  // Freeze page scrolling while a service drawer is open.
+  window.addEventListener('drawer:open', () => lenis.stop());
+  window.addEventListener('drawer:close', () => lenis.start());
+
   document.documentElement.classList.add('motion-ready');
 }

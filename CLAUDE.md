@@ -107,7 +107,7 @@ One long scrolling page that makes a founder or CEO think "this is a senior oper
 
 ## Copy versions
 - `copy: full | compact` in `src/content/site.md`. **Full is Nataliya's original text and is the default.**
-- Preview pages while she chooses: `/` (full), `/compact`, `/expandable` (compact text with "Read more" buttons that reveal the full text in place). A corner switch (`VersionSwitch.astro`, `showVersionSwitch` in `site.md`) jumps between them. Preview pages are `noindex`; delete `src/pages/compact.astro` and `expandable.astro` and turn the switch off before launch.
+- Preview pages while she chooses: `/` (full), `/compact`, `/expandable` ("Interactive": pain points and Ways as accordions, services as cards that open a side drawer, About with one "full story" button; all with Nataliya's full text). A corner switch (`VersionSwitch.astro`, `showVersionSwitch` in `site.md`) jumps between them. Preview pages are `noindex`; delete `src/pages/compact.astro` and `expandable.astro` and turn the switch off before launch.
 - Long text goes through `Text.astro`, which handles all three modes.
 - Any field can have a `…Compact` twin (e.g. `body` / `bodyCompact`); `pick()` in `src/lib/content.ts` chooses.
 - Never shorten or rewrite her copy in the full version without asking.

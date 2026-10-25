@@ -1,22 +1,42 @@
 ---
 import Text from './Text.astro';
-import { section, pick, copyMode, num } from '../lib/content';
+import { section, copyMode, num } from '../lib/content';
 const p = section('pains');
 const mode = copyMode(Astro.url);
+const accordion = mode === 'expandable';
 ---
 <section class="section bg-ink on-dark">
   <div class="wrap">
     <p class="label">{p.eyebrow}</p>
     <h2 class="display h-lg pains__h" data-reveal>{p.headline}<br /><span class="accent">{p.headlineAccent}</span></h2>
-    <ol class="pains">
-      {p.items.map((it: any, i: number) => (
-        <li class="pain" data-reveal>
-          <span class="numeral" aria-hidden="true">{num(i)}</span>
-          <h3 class="display pain__title">{it.title}</h3>
-          <Text obj={it} k="body" class="pain__body" />
-        </li>
-      ))}
-    </ol>
+    {accordion ? (
+      <ol class="pacc" data-acc data-acc-single>
+        {p.items.map((it: any, i: number) => (
+          <li class="pacc__item" data-reveal>
+            <h3 class="pacc__h">
+              <button type="button" class="acc__btn pacc__btn" id={`pain-${i}-btn`} aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`pain-${i}`}>
+                <span class="numeral pacc__num" aria-hidden="true">{num(i)}</span>
+                <span class="display pacc__title">{it.title}</span>
+                <span class="acc__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="acc__panel" id={`pain-${i}`} role="region" aria-labelledby={`pain-${i}-btn`} data-closed={i === 0 ? undefined : ''}>
+              <div class="acc__inner"><p class="pacc__body">{it.body}</p></div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <ol class="pains">
+        {p.items.map((it: any, i: number) => (
+          <li class="pain" data-reveal>
+            <span class="numeral" aria-hidden="true">{num(i)}</span>
+            <h3 class="display pain__title">{it.title}</h3>
+            <Text obj={it} k="body" class="pain__body" />
+          </li>
+        ))}
+      </ol>
+    )}
   </div>
 </section>
 
@@ -35,5 +55,21 @@ const mode = copyMode(Astro.url);
     .pains { grid-template-columns: minmax(0, 1fr); }
     .pain, .pain:nth-child(even) { padding: 40px 0; border-left: 0; }
     .pain:nth-last-child(2) { border-bottom: 1px solid var(--rule-light); }
+  }
+
+  /* Accordion version: an editorial list of big numbered statements. */
+  .pacc { --nw: clamp(72px, 10vw, 150px); margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule-light); }
+  .pacc__item { border-bottom: 1px solid var(--rule-light); }
+  .pacc__h { margin: 0; font: inherit; }
+  .pacc__btn { display: grid; grid-template-columns: var(--nw) minmax(0, 1fr) 28px; align-items: center; gap: 0 16px; padding-block: clamp(22px, 3vw, 34px); }
+  .pacc__num { font-size: clamp(2.6rem, 5vw, 4.25rem); transition: color .3s; }
+  .pacc__title { font-size: clamp(1.35rem, 2.6vw, 2.15rem); line-height: 1.2; color: #fff; transition: color .3s; }
+  .pacc__btn .acc__icon { color: var(--accent); }
+  @media (hover: hover) { .pacc__btn:hover .pacc__title { color: var(--sand); } }
+  .pacc__body { margin: 0; max-width: 44em; padding: 0 44px clamp(28px, 3vw, 40px) calc(var(--nw) + 16px); font-size: 17px; line-height: 1.7; }
+  @media (max-width: 600px) {
+    .pacc__btn { grid-template-columns: minmax(0, 1fr) 24px; }
+    .pacc__num { grid-column: 1 / -1; margin-bottom: 6px; }
+    .pacc__body { padding-left: 0; padding-right: 0; }
   }
 </style>

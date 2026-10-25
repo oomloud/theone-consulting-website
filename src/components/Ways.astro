@@ -4,24 +4,49 @@ import Text from './Text.astro';
 import { section, pick, copyMode } from '../lib/content';
 const w = section('ways');
 const mode = copyMode(Astro.url);
+const accordion = mode === 'expandable';
 ---
 <section class="section bg-olive on-dark ways">
   <div class="watermark ways__wm" aria-hidden="true"><Logo variant="swash" /></div>
   <div class="wrap ways__inner">
     <p class="label">{w.eyebrow}</p>
     <h2 class="display h-lg ways__h" data-reveal>{w.headline}<br /><span class="accent">{w.headlineAccent}</span></h2>
-    <ul class="ways__list">
-      {w.items.map((it: any) => (
-        <li class="way" data-reveal>
-          <div>
-            <h3 class="display way__title">{pick(it, 'title', mode)}</h3>
-            <p class="kicker">{pick(it, 'kicker', mode)}</p>
-          </div>
-          <Text obj={it} k="body" class="way__body" />
-          <p class="way__for"><span class="label label--small">{w.bestForLabel}</span>{pick(it, 'bestFor', mode)}</p>
-        </li>
-      ))}
-    </ul>
+    {accordion ? (
+      <ul class="ways__list" data-acc data-acc-single>
+        {w.items.map((it: any, i: number) => (
+          <li class="wrow" data-reveal>
+            <div class="wrow__head">
+              <div>
+                <h3 class="wrow__h">
+                  <button type="button" class="acc__btn wrow__btn" id={`way-${i}-btn`} aria-expanded="false" aria-controls={`way-${i}`}>
+                    <span class="display way__title">{it.title}</span>
+                  </button>
+                </h3>
+                <p class="kicker">{it.kicker}</p>
+              </div>
+              <p class="way__for"><span class="label label--small">{w.bestForLabel}</span>{it.bestFor}</p>
+              <span class="acc__icon wrow__icon" aria-hidden="true"></span>
+            </div>
+            <div class="acc__panel" id={`way-${i}`} role="region" aria-labelledby={`way-${i}-btn`} data-closed="">
+              <div class="acc__inner"><p class="wrow__body">{it.body}</p></div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <ul class="ways__list">
+        {w.items.map((it: any) => (
+          <li class="way" data-reveal>
+            <div>
+              <h3 class="display way__title">{pick(it, 'title', mode)}</h3>
+              <p class="kicker">{pick(it, 'kicker', mode)}</p>
+            </div>
+            <Text obj={it} k="body" class="way__body" />
+            <p class="way__for"><span class="label label--small">{w.bestForLabel}</span>{pick(it, 'bestFor', mode)}</p>
+          </li>
+        ))}
+      </ul>
+    )}
   </div>
 </section>
 
@@ -35,9 +60,26 @@ const mode = copyMode(Astro.url);
     display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) minmax(0, 3fr); gap: 40px;
     padding-block: 40px; border-bottom: 1px solid var(--rule-light);
   }
-  .way__title { margin: 0 0 8px; font-size: 1.85rem; line-height: 1.15; color: #fff; }
+  .way__title { margin: 0 0 8px; font-size: 1.85rem; line-height: 1.15; color: #fff; transition: color .3s; }
   :global(.way__body) { margin: 0; font-size: 16px; line-height: 1.7; }
   .way__for { margin: 0; font-size: 14px; line-height: 1.6; }
   .way__for .label { display: block; margin-bottom: 6px; }
   @media (max-width: 900px) { .way { grid-template-columns: minmax(0, 1fr); gap: 14px; padding-block: 32px; } }
+
+  /* Accordion version: the whole row header is the trigger. */
+  .wrow { border-bottom: 1px solid var(--rule-light); }
+  .wrow__head {
+    position: relative; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr) 28px;
+    gap: 40px; align-items: center; padding-block: 34px; cursor: pointer;
+  }
+  .wrow__h { margin: 0; font: inherit; }
+  .wrow__btn::after { content: ''; position: absolute; inset: 0; }
+  .wrow__icon { color: var(--sand); }
+  @media (hover: hover) { .wrow__head:hover .way__title { color: var(--sand); } }
+  .wrow__body { margin: 0; max-width: 46em; padding-bottom: 36px; font-size: 16.5px; line-height: 1.7; }
+  @media (max-width: 760px) {
+    .wrow__head { grid-template-columns: minmax(0, 1fr) 24px; gap: 14px; padding-block: 26px; }
+    .wrow__head .way__for { grid-row: 2; grid-column: 1; }
+    .wrow__icon { grid-row: 1; grid-column: 2; align-self: start; margin-top: 8px; }
+  }
 </style>

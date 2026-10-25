@@ -4,6 +4,7 @@ import { section, pick, copyMode, num } from '../lib/content';
 const s = section('services');
 const mode = copyMode(Astro.url);
 const site = section('site');
+const drawers = mode === 'expandable';
 let n = 0;
 const groups = s.groups.map((g: any) => ({ ...g, items: g.items.map((it: any) => ({ ...it, n: num(n++) })) }));
 ---
@@ -15,7 +16,16 @@ const groups = s.groups.map((g: any) => ({ ...g, items: g.items.map((it: any) =>
       <div class="group">
         <p class="label label--small group__name">{g.name}</p>
         <ul class="cards">
-          {g.items.map((it: any) => (
+          {g.items.map((it: any) => drawers ? (
+            <li class="card card--open" data-reveal>
+              <span class="numeral card__num" aria-hidden="true">{it.n}</span>
+              <h3 class="display card__title">
+                <button type="button" class="card__trigger" aria-haspopup="dialog" data-drawer-open={`svc-${it.n}`}>{it.title}</button>
+              </h3>
+              <p class="kicker">{it.kicker}</p>
+              <span class="card__more" aria-hidden="true">Details <span class="card__arrow">→</span></span>
+            </li>
+          ) : (
             <li class="card" data-reveal>
               <span class="numeral card__num" aria-hidden="true">{it.n}</span>
               <h3 class="display card__title">{it.title}</h3>
@@ -29,6 +39,27 @@ const groups = s.groups.map((g: any) => ({ ...g, items: g.items.map((it: any) =>
       </div>
     ))}
   </div>
+
+  {drawers && groups.map((g: any) => g.items.map((it: any) => (
+    <dialog class="drawer" id={`svc-${it.n}`} aria-labelledby={`svc-${it.n}-title`} data-lenis-prevent>
+      <div class="drawer__panel">
+        <button type="button" class="drawer__close" data-drawer-close aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.5" fill="none" /></svg>
+        </button>
+        <div class="drawer__top">
+          <span class="numeral drawer__num" aria-hidden="true">{it.n}</span>
+          <p class="label label--small">{g.name}</p>
+        </div>
+        <h2 class="display drawer__title" id={`svc-${it.n}-title`}>{it.title}</h2>
+        <p class="kicker drawer__kicker">{it.kicker}</p>
+        <p class="drawer__body">{it.body}</p>
+        <p class="drawer__for"><span class="label label--small">{s.forLabel.replace(':', '')}</span>{it.for}</p>
+        <div class="drawer__actions">
+          <a class="btn" href={site.bookingUrl}>{it.cta}</a>
+        </div>
+      </div>
+    </dialog>
+  )))}
 </section>
 
 <style>
@@ -47,4 +78,80 @@ const groups = s.groups.map((g: any) => ({ ...g, items: g.items.map((it: any) =>
   .card__cta { font-size: 14px; font-weight: 600; }
   @media (hover: hover) { .card:hover { transform: translateY(-4px); } }
   @media (max-width: 960px) { .cards { grid-template-columns: minmax(0, 1fr); } .card { padding: 32px 24px; } }
+
+  /* Drawer version: compact cards, the whole card opens a side panel. */
+  .card--open { position: relative; cursor: pointer; min-height: 300px; }
+  .card__trigger {
+    padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
+  }
+  .card__trigger::after { content: ''; position: absolute; inset: 0; }
+  .card__trigger:focus-visible { outline: none; }
+  .card--open:has(.card__trigger:focus-visible) { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .card__more {
+    margin-top: auto; display: inline-flex; align-items: center; gap: 10px;
+    font-size: 11.5px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .card__arrow { transition: transform .3s ease; }
+  @media (hover: hover) {
+    .card--open:hover .card__num { color: var(--ink); }
+    .card--open:hover .card__arrow { transform: translateX(6px); }
+  }
+
+  .drawer {
+    position: fixed; inset: 0 0 0 auto; margin: 0; padding: 0; border: 0;
+    width: min(600px, 100%); max-width: 100%; height: 100dvh; max-height: none;
+    background: var(--paper); color: var(--ink);
+    box-shadow: -24px 0 64px rgb(71 24 39 / 0.18);
+    transform: translateX(100%);
+    transition-property: transform, overlay, display;
+    transition-duration: .5s;
+    transition-timing-function: cubic-bezier(.2, .7, .2, 1);
+    transition-behavior: allow-discrete;
+  }
+  .drawer[open] { transform: none; }
+  @starting-style { .drawer[open] { transform: translateX(100%); } }
+  .drawer::backdrop {
+    background: rgb(71 24 39 / 0);
+    transition-property: background-color, overlay, display;
+    transition-duration: .5s;
+    transition-behavior: allow-discrete;
+  }
+  .drawer[open]::backdrop { background: rgb(71 24 39 / 0.5); }
+  @starting-style { .drawer[open]::backdrop { background: rgb(71 24 39 / 0); } }
+
+  .drawer__panel {
+    height: 100%; overflow-y: auto; overscroll-behavior: contain;
+    display: flex; flex-direction: column; gap: 22px;
+    padding: clamp(32px, 5vw, 64px) clamp(24px, 5vw, 56px) 48px;
+  }
+  .drawer__close {
+    position: absolute; top: 18px; right: 18px; z-index: 1;
+    display: grid; place-items: center; width: 46px; height: 46px; padding: 0;
+    border: 1px solid var(--rule); background: var(--paper); color: var(--ink); cursor: pointer;
+    transition: border-color .25s, color .25s;
+  }
+  .drawer__close svg { width: 20px; height: 20px; }
+  .drawer__close:hover { border-color: var(--accent); color: var(--accent); }
+  .drawer__top { display: flex; align-items: baseline; gap: 20px; padding-bottom: 22px; border-bottom: 1px solid var(--rule); }
+  .drawer__num { font-size: clamp(3.5rem, 7vw, 5.5rem); }
+  .drawer__title { margin: 0; font-size: clamp(2rem, 4vw, 2.9rem); line-height: 1.08; }
+  .drawer__kicker { font-size: 17px; }
+  .drawer__body { margin: 0; font-size: 17px; line-height: 1.75; }
+  .drawer__for { margin: 0; padding: 20px 0; border-block: 1px solid var(--rule); font-size: 15px; line-height: 1.6; }
+  .drawer__for .label { display: block; margin-bottom: 8px; }
+  .drawer__actions { padding-top: 6px; }
+
+  @media (max-width: 640px) {
+    .drawer {
+      inset: auto 0 0 0; width: 100%; height: auto; max-height: 88dvh;
+      transform: translateY(100%);
+      box-shadow: 0 -24px 64px rgb(71 24 39 / 0.2);
+    }
+    .drawer[open] { transform: none; }
+    @starting-style { .drawer[open] { transform: translateY(100%); } }
+    .drawer__panel { max-height: 88dvh; padding-top: 72px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .drawer, .drawer::backdrop { transition: none; }
+  }
 </style>

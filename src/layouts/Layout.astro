@@ -31,6 +31,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <meta property="og:image" content={new URL(og.src, Astro.site)} />
   <meta name="twitter:card" content="summary_large_image" />
   <script is:inline>
+    document.documentElement.classList.add('js');
     // Hide reveal targets only when motion will actually run (see motion.ts).
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('motion');
   </script>
@@ -48,6 +49,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <script>
     import '../scripts/motion';
     import '../scripts/expand';
+    import '../scripts/disclosure';
   </script>
 </body>
 </html>
